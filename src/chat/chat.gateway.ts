@@ -7,8 +7,9 @@ import {
   OnGatewayInit,
 } from '@nestjs/websockets';
 import { Server as SocketIOServer } from 'socket.io';
+import { ConfigService } from '@nestjs/config';
 
-@WebSocketGateway(8000, {
+@WebSocketGateway({
   cors: {
     origin: '*',
   },
@@ -16,10 +17,14 @@ import { Server as SocketIOServer } from 'socket.io';
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
+  constructor(private readonly configService: ConfigService) {}
   @WebSocketServer() server: SocketIOServer;
 
   afterInit(server: SocketIOServer) {
-    console.log('Websocket server initialized');
+    const port = this.configService.get('PORT_API_GATEWAY');
+    server.listen(port);
+
+    console.log('Socket.io server started on port:', port);
   }
 
   handleConnection(client: any, ...args: any[]) {
