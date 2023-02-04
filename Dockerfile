@@ -2,9 +2,9 @@ FROM node:16.3.0-alpine
 
 WORKDIR /api 
 
-COPY . /api/
+COPY . /api
 
-RUN npm install
+RUN npm install && npm run build
 
 ENV PORT_API_GATEWAY=8000
 ENV PORT_SERVER=5000 
